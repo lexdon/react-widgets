@@ -1,3 +1,4 @@
+var moment = require('moment');
 
 if (process.env.NODE_ENV !== 'production' ) {
   [
@@ -10,7 +11,7 @@ if (process.env.NODE_ENV !== 'production' ) {
   })
 }
 
-module.exports = {
+var ReactWidgets = {
 
   DropdownList:     require('./DropdownList'),
   Combobox:         require('./Combobox'),
@@ -30,3 +31,9 @@ module.exports = {
     SlideTransition:        require('./SlideTransition')
   }
 }
+
+var localizer = require('./MomentLocalizer');
+
+ReactWidgets.configure.setDateLocalizer(localizer(moment));
+
+module.exports = ReactWidgets;

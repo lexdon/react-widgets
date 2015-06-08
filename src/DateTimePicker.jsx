@@ -134,7 +134,8 @@ var DateTimePicker = React.createClass({
       , dateListID = this._id('_cal')
       , dropUp = this.props.dropUp
       , renderPopup = _.isFirstFocusedRender(this) || this.props.open
-      , value = dateOrNull(this.props.value)
+      // , value = dateOrNull(this.props.value)
+      , value = this.props.value
       , owns;
 
     if (dateListID && this.props.calendar ) owns = dateListID
@@ -439,8 +440,8 @@ function formatsParser(formats, culture, str){
   return null
 }
 
-function dateOrNull(dt){
-  if (dt && !isNaN(dt.getTime())) return dt
-  return null
-}
+// function dateOrNull(dt){
+//   if (dt && !isNaN(dt.getTime())) return dt
+//   return null
+// }
 

@@ -17,6 +17,7 @@ var NumberPicker = require('../src/NumberPicker.jsx')
 var ComboBox = require('../src/Combobox.jsx')
 var SelectList = require('../src/SelectList.jsx')
 var List = require('../src/List.jsx')
+var moment = require('moment');
 
 var chance = new (require('chance'))
 
@@ -131,10 +132,10 @@ var App = React.createClass({
         <div style={{ maxWidth: 600, height: 1500 }}>
 
           <section className="example" style={{ marginBottom: 20 }}>
-          <button onClick={() => this.dropdowns()}>add</button>
+          {/*<button onClick={() => this.dropdowns()}>add</button>*/}
 
-          <DatePicker culture='fr'/>
-          <NumberPicker />
+          <DatePicker culture='nb' time={false} max={new Date()} min={moment().subtract(3, 'years').toDate()} defaultValue={new Date()} />
+          {/*<NumberPicker />*/}
 
           </section>
         </div>

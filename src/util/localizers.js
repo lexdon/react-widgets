@@ -39,7 +39,6 @@ function checkFormats(requiredFormats, formats){
 }
 
 class NumberLocalizer {
-
   constructor({ format, parse, formats, propType }){
     invariant(typeof format === 'function'
       , 'number localizer `format(..)` must be a function')
