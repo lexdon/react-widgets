@@ -141,7 +141,6 @@ var DateTimePicker = React.createClass({
     if (dateListID && this.props.calendar ) owns = dateListID
     if (timeListID && this.props.time )     owns += ' ' + timeListID
 
-    console.info("DateTimePicker#Render, value: " + this.props.value);
 
     return (
       <div {...props}
@@ -150,6 +149,7 @@ var DateTimePicker = React.createClass({
         onKeyDown={this._maybeHandle(this._keyDown)}
         onFocus={this._maybeHandle(this._focus.bind(null, true), true)}
         onBlur ={this._focus.bind(null, false)}
+        id={this.props.id}
         className={cx(className, 'rw-datetimepicker', 'rw-widget', {
           'rw-state-focus':     this.state.focused,
           'rw-state-disabled':  this.isDisabled(),
@@ -157,6 +157,7 @@ var DateTimePicker = React.createClass({
           'rw-has-both':        this.props.calendar && this.props.time,
           'rw-has-neither':     !this.props.calendar && !this.props.time,
           'rw-rtl':             this.isRtl(),
+
 
           ['rw-open' + (dropUp ? '-up' : '')]: this.props.open
         })}>
@@ -189,7 +190,7 @@ var DateTimePicker = React.createClass({
         <span className='rw-select'>
           {
             this.props.calendar &&
-            <Btn tabIndex='-1'
+            <Btn
               className='rw-btn-calendar'
               disabled={this.isDisabled() || this.isReadOnly()}
               aria-disabled={this.isDisabled() || this.isReadOnly()}
