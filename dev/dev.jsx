@@ -42,26 +42,28 @@ configure.setDateLocalizer({
     year: 'YYYY',
 
     decade: (date, culture, localizer) => {
-      return localizer.format(date, 'YYYY', culture) 
+      return localizer.format(date, 'YYYY', culture)
         + ' - ' + localizer.format(endOfDecade(date), 'YYYY', culture)
     },
-    
+
     century: (date, culture, localizer) => {
       return localizer.format(date, 'YYYY', culture)
         + ' - ' + localizer.format(endOfCentury(date), 'YYYY', culture)
     }
   },
 
-  firstOfWeek(culture){ 
+  firstOfWeek(culture){
     return moment.localeData(culture).firstDayOfWeek()
   },
 
   parse(value, format, culture){
-    return moment(value, format).locale(culture).toDate()
+    moment.locale(culture)
+    return moment(value, format).toDate()
   },
 
   format(value, format, culture){
-    return moment(value).locale(culture).format(format)
+    moment.locale(culture)
+    return moment(value).format(format)
   }
 })
 
@@ -134,7 +136,7 @@ var App = React.createClass({
           <section className="example" style={{ marginBottom: 20 }}>
           {/*<button onClick={() => this.dropdowns()}>add</button>*/}
 
-          <DatePicker culture='nb' time={false} max={new Date()} min={moment().subtract(3, 'years').toDate()} defaultValue={new Date()} />
+          <DatePicker culture='nb' time={false} max={new Date()} min={moment().subtract(3, 'years').toDate()} defaultValue={new Date()} onChange={this.onChange} />
           {/*<NumberPicker />*/}
 
           </section>

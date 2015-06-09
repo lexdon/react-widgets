@@ -76,8 +76,8 @@ var propTypes = {
 
 
     messages:      React.PropTypes.shape({
-      calendarButton: React.PropTypes.string, 
-      timeButton:     React.PropTypes.string, 
+      calendarButton: React.PropTypes.string,
+      timeButton:     React.PropTypes.string,
     })
   }
 
@@ -106,7 +106,7 @@ var DateTimePicker = React.createClass({
 
     return {
       value:            null,
-      
+
       min:              new Date(1900,  0,  1),
       max:              new Date(2099, 11, 31),
       calendar:         true,
@@ -124,7 +124,7 @@ var DateTimePicker = React.createClass({
   },
 
   render: function(){
-    var { 
+    var {
         className
       , ...props } = _.omit(this.props, Object.keys(propTypes))
       , calProps   = _.pick(this.props, Object.keys(compat.type(Calendar).propTypes))
@@ -140,6 +140,8 @@ var DateTimePicker = React.createClass({
 
     if (dateListID && this.props.calendar ) owns = dateListID
     if (timeListID && this.props.time )     owns += ' ' + timeListID
+
+    console.info("DateTimePicker#Render, value: " + this.props.value);
 
     return (
       <div {...props}
@@ -158,7 +160,7 @@ var DateTimePicker = React.createClass({
 
           ['rw-open' + (dropUp ? '-up' : '')]: this.props.open
         })}>
-        
+
         <DateInput ref='valueInput'
           aria-labelledby={this.props['aria-labelledby']}
           aria-activedescendant={ this.props.open
@@ -174,7 +176,7 @@ var DateTimePicker = React.createClass({
           readOnly={this.isReadOnly()}
           role={ this.props.time ? 'combobox' : null }
           value={value}
-          
+
           format={getFormat(this.props)}
           editFormat={this.props.editFormat}
 
@@ -182,10 +184,10 @@ var DateTimePicker = React.createClass({
           culture={this.props.culture}
           parse={this._parse}
           onChange={this._change} />
-          
+
         { (this.props.calendar || this.props.time) &&
         <span className='rw-select'>
-          { 
+          {
             this.props.calendar &&
             <Btn tabIndex='-1'
               className='rw-btn-calendar'
@@ -207,7 +209,7 @@ var DateTimePicker = React.createClass({
         </span>
         }
 
-        <Popup 
+        <Popup
           dropUp={dropUp}
           open={ this.props.open === popups.TIME }
           onRequestClose={this.close}
@@ -233,13 +235,13 @@ var DateTimePicker = React.createClass({
             }
           </div>
         </Popup>
-        <Popup 
+        <Popup
           className='rw-calendar-popup'
           dropUp={dropUp}
           open={ this.props.open === popups.CALENDAR}
           duration={this.props.duration}
           onRequestClose={this.close}>
-          
+
           { renderPopup &&
             <Calendar {...calProps }
               ref="calPopup"
@@ -301,10 +303,10 @@ var DateTimePicker = React.createClass({
   _focus: function(focused, e){
     var calendarOpen = this.props.open === popups.CALENDAR;
 
-    // #75: need to aggressively reclaim focus from the calendar otherwise 
+    // #75: need to aggressively reclaim focus from the calendar otherwise
     // disabled header/footer buttons will drop focus completely from the widget
-    if(focused) 
-      calendarOpen && this.refs.valueInput.focus() 
+    if(focused)
+      calendarOpen && this.refs.valueInput.focus()
 
     this.setTimeout('focus', () => {
       if(!focused) this.close()
@@ -322,9 +324,9 @@ var DateTimePicker = React.createClass({
   },
 
   _selectDate(date){
-    var format   = getFormat(this.props) 
+    var format   = getFormat(this.props)
       , dateTime = dates.merge(date, this.props.value)
-      , dateStr  = formatDate(date, format, this.props.culture) 
+      , dateStr  = formatDate(date, format, this.props.culture)
 
     this.close()
     this.notify('onSelect', [dateTime, dateStr])
@@ -333,9 +335,9 @@ var DateTimePicker = React.createClass({
   },
 
   _selectTime(datum){
-    var format   = getFormat(this.props) 
+    var format   = getFormat(this.props)
       , dateTime = dates.merge(this.props.value, datum.date)
-      , dateStr  = formatDate(datum.date, format, this.props.culture) 
+      , dateStr  = formatDate(datum.date, format, this.props.culture)
 
     this.close()
     this.notify('onSelect', [dateTime, dateStr])
@@ -366,7 +368,7 @@ var DateTimePicker = React.createClass({
     if ( parse )
       formats = formats.concat(this.props.parse)
 
-    invariant(formats.length, 
+    invariant(formats.length,
       'React Widgets: there are no specified `parse` formats provided and the `format` prop is a function. ' +
       'the DateTimePicker is unable to parse `%s` into a dateTime, ' +
       'please provide either a parse function or Globalize.js compatible string for `format`', string);
@@ -413,12 +415,12 @@ module.exports.BaseDateTimePicker = DateTimePicker
 function getFormat(props){
   var cal  = props[popups.CALENDAR] != null ? props.calendar : true
     , time = props[popups.TIME] != null ? props.time : true;
- 
-  return props.format 
-    ? props.format 
+
+  return props.format
+    ? props.format
     : (cal && time) || (!cal && !time)
       ? localizers.date.formats.default
-      : localizers.date.formats[cal ? 'date' : 'time'] 
+      : localizers.date.formats[cal ? 'date' : 'time']
 }
 
 function formatDate(date, format, culture){

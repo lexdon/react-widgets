@@ -5,7 +5,7 @@ function globalizeDateLocalizer(globalize){
   const shortNames = Object.create(null);
 
   function getCulture(culture){
-    return culture 
+    return culture
         ? (localizer.globalize || globalize).findClosestCulture(culture)
         : (localizer.globalize || globalize).culture()
   }
@@ -42,10 +42,10 @@ function globalizeDateLocalizer(globalize){
       month: 'MMM',
       year: 'yyyy',
 
-      decade: (dt, culture, l) => 
+      decade: (dt, culture, l) =>
         `${l.format(dt, l.formats.year, culture)} - ${l.format(dates.endOf(dt, 'decade'), l.formats.year, culture)}`,
-      
-      century: (dt, culture, l) => 
+
+      century: (dt, culture, l) =>
         `${l.format(dt, l.formats.year, culture)} - ${l.format(dates.endOf(dt, 'century'), l.formats.year, culture)}`
     },
 

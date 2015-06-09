@@ -20,12 +20,12 @@ var ReactWidgets = {
   DateTimePicker:   require('./DateTimePicker'),
 
   NumberPicker:     require('./NumberPicker'),
-  
+
   Multiselect:      require('./Multiselect'),
   SelectList:       require('./SelectList'),
 
   configure:        require('./configure'),
-  
+
   utils: {
     ReplaceTransitionGroup: require('./ReplaceTransitionGroup'),
     SlideTransition:        require('./SlideTransition')
@@ -34,6 +34,6 @@ var ReactWidgets = {
 
 var localizer = require('./MomentLocalizer');
 
-ReactWidgets.configure.setDateLocalizer(localizer(moment));
+//ReactWidgets.configure.setDateLocalizer(localizer(moment));
 
 module.exports = ReactWidgets;
