@@ -112,6 +112,10 @@ var App = React.createClass({
     }
   },
 
+  onChange(date, str) {
+    console.log(date, str);
+  },
+
   render(){
     var self = this;
 
