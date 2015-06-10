@@ -146,6 +146,7 @@ var DateTimePicker = React.createClass({
     if (dateListID && this.props.calendar ) owns = dateListID
     if (timeListID && this.props.time )     owns += ' ' + timeListID
 
+    var spanClasses = 'rw-select' + (this.props.displayError ? ' ' + this.props.errorClass : '');
 
     return (
       <div {...props}
@@ -193,7 +194,7 @@ var DateTimePicker = React.createClass({
           onChange={this._change} />
 
         { (this.props.calendar || this.props.time) &&
-        <span className='rw-select'>
+        <span className={spanClasses}>
           {
             this.props.calendar &&
             <Btn
