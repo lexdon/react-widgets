@@ -73,6 +73,11 @@ var propTypes = {
                       React.PropTypes.string,
                       React.PropTypes.func
                     ]),
+    errorClass:     React.PropTypes.string.isRequired,
+
+    id:             React.PropTypes.string.isRequired,
+
+    displayError:   React.PropTypes.bool.isRequired,        
 
 
     messages:      React.PropTypes.shape({
@@ -150,14 +155,15 @@ var DateTimePicker = React.createClass({
         onFocus={this._maybeHandle(this._focus.bind(null, true), true)}
         onBlur ={this._focus.bind(null, false)}
         id={this.props.id}
-        className={cx(className, 'rw-datetimepicker', 'rw-widget', {
+        className={cx(className, 'rw-datetimepicker', 'rw-widget',
+          this.props.displayError ? this.props.errorClass : '', 
+         {
           'rw-state-focus':     this.state.focused,
           'rw-state-disabled':  this.isDisabled(),
           'rw-state-readonly':  this.isReadOnly(),
           'rw-has-both':        this.props.calendar && this.props.time,
           'rw-has-neither':     !this.props.calendar && !this.props.time,
           'rw-rtl':             this.isRtl(),
-
 
           ['rw-open' + (dropUp ? '-up' : '')]: this.props.open
         })}>

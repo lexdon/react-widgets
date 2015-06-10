@@ -141,7 +141,7 @@ var App = React.createClass({
           <section className="example" style={{ marginBottom: 20 }}>
           {/*<button onClick={() => this.dropdowns()}>add</button>*/}
 
-          <DatePicker id="test" culture='nb' time={false} max={new Date()} min={moment().subtract(3, 'years').toDate()} defaultValue={new Date()} onChange={this.onChange} />
+          <DatePicker errorClass="error" displayError={false} id="test" culture='nb' time={false} max={new Date()} min={moment().subtract(3, 'years').toDate()} defaultValue={new Date()} onChange={this.onChange} />
           {/*<NumberPicker />*/}
 
           </section>
