@@ -113,6 +113,8 @@ var App = React.createClass({
   },
 
   onChange(date, str) {
+    console.log(date);
+    console.log(str);
   },
 
   render(){

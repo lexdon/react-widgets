@@ -268,8 +268,9 @@ var DateTimePicker = React.createClass({
         if( date != this.props.value )
           change(date, str)
       }
-      else if (!dates.eq(date, this.props.value))
+      else { //if (!dates.eq(date, this.props.value))
         change(date, str)
+      }
     }
   },
 
