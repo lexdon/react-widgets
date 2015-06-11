@@ -198,6 +198,7 @@ var DateTimePicker = React.createClass({
           {
             this.props.calendar &&
             <Btn
+              focusedClass={this.props.focusedClass}
               className='rw-btn-calendar'
               disabled={this.isDisabled() || this.isReadOnly()}
               aria-disabled={this.isDisabled() || this.isReadOnly()}
