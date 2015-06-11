@@ -77,8 +77,9 @@ var propTypes = {
 
     id:             React.PropTypes.string.isRequired,
 
-    displayError:   React.PropTypes.bool.isRequired,        
+    displayError:   React.PropTypes.bool.isRequired,   
 
+    calendarButtonFocusedClass: React.PropTypes.string.isRequired,   
 
     messages:      React.PropTypes.shape({
       calendarButton: React.PropTypes.string,
@@ -104,6 +105,7 @@ var DateTimePicker = React.createClass({
   getInitialState() {
     return {
       focused: false,
+      calendarButtonFocused: false
     }
   },
 
@@ -128,6 +130,14 @@ var DateTimePicker = React.createClass({
     }
   },
 
+  onCalendarButtonFocus(e) {
+    this.setState({calendarButtonFocused: true});
+  },
+
+  onCalendarButtonBlur(e) {
+    this.setState({calendarButtonFocused: false});
+  },
+
   render: function(){
     var {
         className
@@ -147,6 +157,9 @@ var DateTimePicker = React.createClass({
     if (timeListID && this.props.time )     owns += ' ' + timeListID
 
     var spanClasses = 'rw-select' + (this.props.displayError ? ' ' + this.props.errorClass : '');
+
+    if (this.props.calendarButtonFocusedClass && this.state.calendarButtonFocused)
+      spanClasses += ' ' + this.props.calendarButtonFocusedClass;
 
     return (
       <div {...props}
@@ -194,11 +207,12 @@ var DateTimePicker = React.createClass({
           onChange={this._change} />
 
         { (this.props.calendar || this.props.time) &&
-        <span className={spanClasses}>
+        <span className={spanClasses} focusedClass={this.props.calendarButtonFocusedClass}>
           {
             this.props.calendar &&
             <Btn
-              focusedClass={this.props.focusedClass}
+              onFocus={this.onCalendarButtonFocus}
+              onBlur={this.onCalendarButtonBlur}
               className='rw-btn-calendar'
               disabled={this.isDisabled() || this.isReadOnly()}
               aria-disabled={this.isDisabled() || this.isReadOnly()}
