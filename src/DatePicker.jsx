@@ -9,17 +9,17 @@ var configure = require('../src/configure')
 var React = require('react/addons')
 //var jquery = require('jquery')
 var index = require('../src')
-var DropdownList = require('../src/DropdownList.jsx')
-var Multiselect = require('../src/Multiselect.jsx')
-var Calendar = require('../src/Calendar.jsx')
-var DatePicker = require('../src/DateTimePicker.jsx')
-var NumberPicker = require('../src/NumberPicker.jsx')
-var ComboBox = require('../src/Combobox.jsx')
-var SelectList = require('../src/SelectList.jsx')
-var List = require('../src/List.jsx')
+var DropdownList = require('./DropdownList.jsx')
+var Multiselect = require('./Multiselect.jsx')
+var Calendar = require('./Calendar.jsx')
+var DateTimePicker = require('./DateTimePicker.jsx')
+var NumberPicker = require('./NumberPicker.jsx')
+var ComboBox = require('./Combobox.jsx')
+var SelectList = require('./SelectList.jsx')
+var List = require('./List.jsx')
 var moment = require('moment');
-var toInt = require('../src/util/to-int.js');
-var invalidCharacterFound = require('../src/util/dateHelper.js');
+var toInt = require('./util/to-int.js');
+var invalidCharacterFound = require('./util/dateHelper.js');
 
 var chance = new (require('chance'));
 var states = require('./constants/DateConstants.js');
@@ -87,7 +87,7 @@ configure.setDateLocalizer(localizer);
 //   return jquery(element).animate(props, duration, callback)
 // })
 
-module.exports = React.createClass({
+var DatePicker = React.createClass({
 
   propTypes: {
     onChange: React.PropTypes.func,
@@ -277,7 +277,7 @@ module.exports = React.createClass({
         {this.props.native ? 
           <input type="date" defaultValue={moment().format('YYYY-MM-DD')}/>
           :
-          <DatePicker 
+          <DateTimePicker 
           onFocus={this.onFocus} 
           inputValueStore={this.state.inputValueStore} 
           presenter={this.presenter} 
@@ -298,4 +298,6 @@ module.exports = React.createClass({
 
 
 })
+
+module.exports = DatePicker;
 

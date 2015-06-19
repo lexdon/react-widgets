@@ -59,10 +59,10 @@ var App = React.createClass({
 		return (
 			<div>
 				<h1>{this.state.something}</h1>
-    		<DatePicker twoDigitYearBreakpoint={30} onChange={this.onChange}/>
-    		<DatePicker twoDigitYearBreakpoint={50} onChange={this.onChange}/>
-    		<DatePicker twoDigitYearBreakpoint={70}/>
-    		<DatePicker twoDigitYearBreakpoint={90}/>
+    		<DatePicker id="test1" twoDigitYearBreakpoint={30} onChange={this.onChange}/>
+    		<DatePicker id="test2" twoDigitYearBreakpoint={50} onChange={this.onChange}/>
+    		<DatePicker id="test3" twoDigitYearBreakpoint={70}/>
+    		<DatePicker id="test4" twoDigitYearBreakpoint={90}/>
 
     	</div>
 		)

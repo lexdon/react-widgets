@@ -32,10 +32,6 @@ module.exports = React.createClass({
     }
   },
 
-  componentDidMount() {
-    console.log(this.props.inputValueStore.value);
-  },
-
   componentWillReceiveProps: function(nextProps) {
     this._setState(nextProps, (text) => {
       this.setState({
