@@ -1,184 +1,75 @@
-'use strict';
-require('../src/less/react-widgets.less')
-
-//require('react-a11y')();
-var configure = require('../src/configure')
-
-//configure.setGlobalizeInstance(window.Globalize);
-
 var React = require('react/addons')
-//var jquery = require('jquery')
-var index = require('../src')
-var DropdownList = require('../src/DropdownList.jsx')
-var Multiselect = require('../src/Multiselect.jsx')
-var Calendar = require('../src/Calendar.jsx')
-var DatePicker = require('../src/DateTimePicker.jsx')
-var NumberPicker = require('../src/NumberPicker.jsx')
-var ComboBox = require('../src/Combobox.jsx')
-var SelectList = require('../src/SelectList.jsx')
-var List = require('../src/List.jsx')
-var moment = require('moment');
-
-var chance = new (require('chance'))
-
-var { ModalTrigger, Modal } = require('react-bootstrap')
-
-var moment = require('moment')
-
-var endOfDecade = date => moment(date).add(10, 'year').add(-1, 'millisecond').toDate()
-var endOfCentury = date => moment(date).add(100, 'year').add(-1, 'millisecond').toDate()
-
-configure.setDateLocalizer({
-  formats: {
-    date: 'L',
-    time: 'LT',
-    default: 'lll',
-    header: 'MMMM YYYY',
-    footer: 'LL',
-    weekday: (day, culture, localizer) => moment().locale(culture).weekday(day).format('dd'),
-
-    dayOfMonth: 'DD',
-    month: 'MMM',
-    year: 'YYYY',
-
-    decade: (date, culture, localizer) => {
-      return localizer.format(date, 'YYYY', culture)
-        + ' - ' + localizer.format(endOfDecade(date), 'YYYY', culture)
-    },
-
-    century: (date, culture, localizer) => {
-      return localizer.format(date, 'YYYY', culture)
-        + ' - ' + localizer.format(endOfCentury(date), 'YYYY', culture)
-    }
-  },
-
-  firstOfWeek(culture){
-    return moment.localeData(culture).firstDayOfWeek()
-  },
-
-  parse(value, format, culture){
-    moment.locale(culture)
-    return moment(value, format).toDate()
-  },
-
-  format(value, format, culture){
-    moment.locale(culture)
-    return moment(value).format(format)
-  }
-})
-
-
-// configure.setAnimate((element, props, duration, ease, callback) => {
-//   return jquery(element).animate(props, duration, callback)
-// })
-
+var DatePicker = require('../src/DatePicker.jsx')
+var states = require('../src/constants/DateConstants.js')
 
 var App = React.createClass({
 
-  getInitialState: function(){
-    var list = generateList()
-    return {
-      data: list,
-      suggestdata: suggestList(),
-      dropdownValue: list[0],
-      comboboxValue: 1,
-      //comboboxValue: list[0],
-      selectValues: [3,4,5,2],
-      calDate: new Date(),
-      numberValue: 1,
-      open: false
+	getInitialState() {
+		return {
+			something: "Something"
+		}
+	},
+
+	onChange(value, state) {
+		switch(state) {
+      case states.INVALID_DATE_FORMAT_CONTAINS_INVALID_CHARACTER:
+        this.setState({
+          something: "Contains invalid character :(", 
+        });
+        break;
+      case states.INVALID_DATE_FORMAT:
+        this.setState({
+          something: "Not valid :(", 
+        });
+        break;
+      case states.INVALID_FOUR_DIGIT_BEFORE_MIN:
+        this.setState({
+          something: "Date is before something :(", 
+        });
+        break;
+      case states.INVALID_FOUR_DIGIT_AFTER_MAX:
+        this.setState({
+          something: "Date is after today: (", 
+        });
+        break;
+      case states.INVALID_TWO_DIGIT_BEFORE_MIN:
+        this.setState({
+          something: "Date is before something :(", 
+        });
+        break;
+      case states.INVALID_TWO_DIGIT_AFTER_MAX:
+        this.setState({
+          something: "Date is after today: (", 
+        });
+        break;
+      case states.VALID_TWO_DIGIT_YEAR:
+        this.setState({
+          something: "DD.MM.YY", 
+        });
+        break;
+      case states.VALID_FOUR_DIGIT_YEAR:
+        this.setState({
+          something: "DD.MM.YYYY",
+        });
+        break;
     }
-  },
+	},
 
-  dropdowns(){
-    var i = 0, dropdowns = [];
+	render() {
+		return (
+			<div>
+				<h1>{this.state.something}</h1>
+    		<DatePicker twoDigitYearBreakpoint={30} onChange={this.onChange}/>
+    		<DatePicker twoDigitYearBreakpoint={50} onChange={this.onChange}/>
+    		<DatePicker twoDigitYearBreakpoint={70}/>
+    		<DatePicker twoDigitYearBreakpoint={90}/>
 
-    while (i++ < 50) {
-      dropdowns.push(<DropdownList
-        valueField='id'
-        textField='name'
-        data={generateList()}
-      />)
-    }
-
-    this.start = +(new Date())
-    this.setState({ dropdowns })
-  },
-
-  componentDidUpdate(){
-    if (this.start){
-      console.log('rendered: ', +(new Date) - this.start)
-      this.start = null
-    }
-  },
-
-  onChange(date, str) {
-    console.log(date);
-    console.log(str);
-  },
-
-  render(){
-    var self = this;
-
-    function change(field, data) {
-      var obj = {}
-
-      if(field === 'selectValues' && Array.isArray(data))
-        data = data.map( d => d.id)
-
-      if(field === 'open') console.log(field, data)
-
-      obj[field] = data.hasOwnProperty('id') ? data.id : data
-
-      self.setState(obj)
-      //console.log('example: set field: ' + field, data)
-    }
-
-    return (
-      <div style={{ fontSize: 14 }}>
-        <div style={{ maxWidth: 600, height: 1500 }}>
-
-          <section className="example" style={{ marginBottom: 20 }}>
-          {/*<button onClick={() => this.dropdowns()}>add</button>*/}
-
-          <DatePicker calendarButtonFocusedClass="hocus-pocus" errorClass="error" displayError={false} id="test" culture='nb' time={false} max={new Date()} min={moment().subtract(3, 'years').toDate()} defaultValue={new Date()} onChange={this.onChange} />
-          {/*<NumberPicker />*/}
-
-          </section>
-        </div>
-      </div>
-    )
-  },
-
+    	</div>
+		)
+	},
 
 })
 
 React.render(<App/>, document.body);
 
-
-
-function generateList(limit = 100){
-  var arr = new Array(limit)
-
-  for(var i = 0; i < arr.length; i++){
-    var first = chance.first(), last = chance.last()
-    arr[i] = { id: i + 1, name: `${first} ${last}`, first, surname: last }
-  }
-
-  return arr
-}
-
-function suggestList(){
-  var i = 0;
-
-  return [
-    { id: i += 1, name: "james" },
-    { id: i += 1, name: "jan" },
-    { id: i += 1, name: "jase" },
-    { id: i += 1, name: "jason" },
-    { id: i += 1, name: "jim" },
-    { id: i += 1, name: "jimmy" },
-    { id: i += 1, name: "jimmy smith" },
-    { id: i += 1, name: "john" }
-  ]
-}
+module.exports = App;

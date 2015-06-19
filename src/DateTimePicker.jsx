@@ -17,6 +17,7 @@ var React  = require('react')
   , DateInput = require('./DateInput')
   , Btn       = require('./WidgetButton')
   , CustomPropTypes = require('./util/propTypes')
+  , isDate = require('../src/util/dateHelper.js')
   , createUncontrolledWidget = require('uncontrollable');
 
 var viewEnum  = Object.keys(views).map( k => views[k] );
@@ -26,7 +27,7 @@ var propTypes = {
     ...compat.type(Calendar).propTypes,
 
     //-- controlled props -----------
-    value:          React.PropTypes.instanceOf(Date),
+    value:          React.PropTypes.oneOfType([React.PropTypes.instanceOf(Date), React.PropTypes.string]),
     onChange:       React.PropTypes.func,
     open:           React.PropTypes.oneOf([false, popups.TIME, popups.CALENDAR]),
     onToggle:       React.PropTypes.func,
@@ -79,7 +80,13 @@ var propTypes = {
 
     displayError:   React.PropTypes.bool.isRequired,   
 
-    calendarButtonFocusedClass: React.PropTypes.string.isRequired,   
+    calendarButtonFocusedClass: React.PropTypes.string.isRequired,
+
+    dateValidator: React.PropTypes.func.isRequired,
+
+    inputValueStore:  React.PropTypes.shape({
+      value: React.PropTypes.string
+    }).isRequired,
 
     messages:      React.PropTypes.shape({
       calendarButton: React.PropTypes.string,
@@ -150,7 +157,8 @@ var DateTimePicker = React.createClass({
       , dropUp = this.props.dropUp
       , renderPopup = _.isFirstFocusedRender(this) || this.props.open
       // , value = dateOrNull(this.props.value)
-      , value = this.props.value
+      , dateInputValue = this.props.value
+      , value = this.props.value instanceof Date ? dateInputValue : new Date()
       , owns;
 
     if (dateListID && this.props.calendar ) owns = dateListID
@@ -183,6 +191,8 @@ var DateTimePicker = React.createClass({
         })}>
 
         <DateInput ref='valueInput'
+          presenter={this.props.presenter}
+          inputValueStore={this.props.inputValueStore}
           aria-labelledby={this.props['aria-labelledby']}
           aria-activedescendant={ this.props.open
             ? this.props.open === popups.CALENDAR ? this._id('_cal_view_selected_item') : timeOptID
@@ -197,7 +207,7 @@ var DateTimePicker = React.createClass({
           readOnly={this.isReadOnly()}
           role={ this.props.time ? 'combobox' : null }
           value={value}
-
+          dateValidator={this.props.dateValidator}
           format={getFormat(this.props)}
           editFormat={this.props.editFormat}
 
@@ -233,32 +243,6 @@ var DateTimePicker = React.createClass({
         }
 
         <Popup
-          dropUp={dropUp}
-          open={ this.props.open === popups.TIME }
-          onRequestClose={this.close}
-          duration={this.props.duration}
-          onOpening={() => this.refs.timePopup.forceUpdate()}>
-
-          <div>
-            { renderPopup &&
-              <Time ref="timePopup"
-                id={timeListID}
-                optID={timeOptID}
-                aria-hidden={ !this.props.open }
-                value={value}
-                format={this.props.timeFormat}
-                step={this.props.step}
-                min={this.props.min}
-                max={this.props.max}
-                culture={this.props.culture}
-                onMove={this._scrollTo}
-                preserveDate={!!this.props.calendar}
-                itemComponent={this.props.timeComponent}
-                onSelect={this._maybeHandle(this._selectTime)}/>
-            }
-          </div>
-        </Popup>
-        <Popup
           className='rw-calendar-popup'
           dropUp={dropUp}
           open={ this.props.open === popups.CALENDAR}
@@ -280,6 +264,8 @@ var DateTimePicker = React.createClass({
   },
 
   _change: function(date, str, constrain){
+    if (this.props.presenter)
+      this.props.presenter(date, str);
     var change = this.props.onChange
 
     if(constrain)
@@ -348,8 +334,13 @@ var DateTimePicker = React.createClass({
   },
 
   _selectDate(date){
+    var v = this.props.value
+
+    // if (!isDate(v)) //v henter forrige value, feiler uten new Date() på noen
+      v = new Date();
+
     var format   = getFormat(this.props)
-      , dateTime = dates.merge(date, this.props.value)
+      , dateTime = dates.merge(date, v)
       , dateStr  = formatDate(date, format, this.props.culture)
 
     this.close()

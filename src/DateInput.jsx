@@ -16,9 +16,14 @@ module.exports = React.createClass({
     editFormat:   CustomPropTypes.dateFormat,
     parse:        React.PropTypes.func.isRequired,
 
-    value:        React.PropTypes.instanceOf(Date),
+    value:        React.PropTypes.oneOfType([React.PropTypes.instanceOf(Date), React.PropTypes.string]),
     onChange:     React.PropTypes.func.isRequired,
     culture:      React.PropTypes.string,
+    dateValidator: React.PropTypes.func.isRequired,
+    inputValueStore:  React.PropTypes.shape({
+      value: React.PropTypes.string
+    }).isRequired,
+
   },
 
   getDefaultProps: function(){
@@ -27,33 +32,39 @@ module.exports = React.createClass({
     }
   },
 
+  componentDidMount() {
+    console.log(this.props.inputValueStore.value);
+  },
+
   componentWillReceiveProps: function(nextProps) {
-     var text = formatDate(
-            nextProps.value
-          , nextProps.editing && nextProps.editFormat
-              ? nextProps.editFormat
-              : nextProps.format
-          , nextProps.culture)
-
-    this.startValue = text
-
-    this.setState({
-      textValue: text
-    })
+    this._setState(nextProps, (text) => {
+      this.setState({
+        textValue: text
+      });
+    });
   },
 
   getInitialState: function(){
-    var text = formatDate(
-            this.props.value
-          , this.props.editing && this.props.editFormat
-              ? this.props.editFormat
-              : this.props.format
-          , this.props.culture)
+    return this._setState(this.props, (text) => {
+      return {
+        textValue: text
+      };
+    });
+  },
 
-    this.startValue = text
+  _setState(props, cb) {
+    if (props.value instanceof Date) {
+      var text = formatDate(
+        props.value,
+        props.editing && props.editFormat 
+          ? props.editFormat 
+          : props.format, 
+        props.culture,
+        this.props.presenter);
 
-    return {
-      textValue: text
+      return cb(text);
+    } else {
+      return cb(props.value);
     }
   },
 
@@ -62,10 +73,11 @@ module.exports = React.createClass({
 
     return (
       <input
-        {...this.props}
+        {...this.props}       
+        ref="input"
         type='text'
         className={cx({'rw-input': true })}
-        value={value}
+        value={this.props.inputValueStore.value}
         aria-disabled={this.props.disabled}
         aria-readonly={this.props.readOnly}
         disabled={this.props.disabled}
@@ -77,16 +89,19 @@ module.exports = React.createClass({
 
   _change: function(e){
     this.setState({ textValue: e.target.value });
+    this.props.inputValueStore.value = e.target.value;
     this._needsFlush = true
   },
 
   _blur: function(e){
     var val = e.target.value;
 
+    var input = React.findDOMNode(this.refs['input']);
+
     if ( this._needsFlush ){
       this._needsFlush = false
       this.props.onChange(
-        localizers.date.parse(val, this.props.format, this.props.culture), val);
+        localizers.date.parse(val, this.props.format, this.props.culture, this.props.dateValidator, input), val);
     }
   },
 
@@ -100,11 +115,11 @@ function isValid(d) {
   return !isNaN(d.getTime());
 }
 
-function formatDate(date, format, culture){
+function formatDate(date, format, culture, props){
   var val = ''
 
   if ( (date instanceof Date) && isValid(date) )
-    val = localizers.date.format(date, format, culture)
+    val = localizers.date.format(date, format, culture, props ? props.presenter : undefined)
 
   return val;
 }

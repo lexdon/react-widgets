@@ -77,14 +77,15 @@ class DateLocalizer {
     this.formats  = spec.formats
     this.startOfWeek = spec.firstOfWeek
 
-    this.format = (value, format, culture) => _format(this, spec.format, value, format, culture)
+    this.format = (value, format, culture, presenter) => _format(this, spec.format, value, format, culture, presenter)
 
-    this.parse = (value, format, culture) => {
-      let result = spec.parse.call(this, value, format, culture)
+    this.parse = (value, format, culture, dateValidator) => {
+      let result = spec.parse.call(this, value, format, culture, dateValidator)
 
       invariant(result == null 
+        || typeof(result) === 'string'
         || (result instanceof Date && !isNaN(result.getTime()))
-        , 'date localizer `parse(..)` must return a valid Date, null, or undefined')
+        , 'date localizer `parse(..)` must return a valid Date, string, null, or undefined')
 
       return result
     }
