@@ -1,6 +1,6 @@
 var React = require('react/addons')
 var DatePicker = require('../src/DatePicker.jsx')
-var states = require('../src/constants/DateConstants.js')
+var states = require('../src/DateConstants.js')
 
 var App = React.createClass({
 
