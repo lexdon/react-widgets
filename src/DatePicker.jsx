@@ -300,5 +300,6 @@ var DatePicker = React.createClass({
 
 })
 
-module.exports = createUncontrolledWidget(DatePicker, { open: 'onToggle', value: 'onChange' });
+//module.exports = createUncontrolledWidget(DatePicker, { open: 'onToggle', value: 'onChange' });
+module.exports = DatePicker;
 
