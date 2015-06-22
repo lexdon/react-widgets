@@ -23,6 +23,7 @@ var invalidCharacterFound = require('./util/dateHelper.js');
 
 var chance = new (require('chance'));
 var states = require('./DateConstants.js');
+var createUncontrolledWidget = require('uncontrollable');
 
 var { ModalTrigger, Modal } = require('react-bootstrap')
 var yearBreakpoint;
@@ -299,5 +300,5 @@ var DatePicker = React.createClass({
 
 })
 
-module.exports = DatePicker;
+module.exports = createUncontrolledWidget(DatePicker, { open: 'onToggle', value: 'onChange' });
 
