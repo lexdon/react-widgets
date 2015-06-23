@@ -91,7 +91,8 @@ var propTypes = {
     messages:      React.PropTypes.shape({
       calendarButton: React.PropTypes.string,
       timeButton:     React.PropTypes.string,
-    })
+    }),
+    calendarOnChange: React.PropTypes.func
   }
 
 
@@ -347,6 +348,9 @@ var DateTimePicker = React.createClass({
     this.notify('onSelect', [dateTime, dateStr])
     this._change(dateTime, dateStr, true)
     this.focus()
+    if(this.props.calendarOnChange) {
+      this.props.calendarOnChange();
+    }
   },
 
   _selectTime(datum){
