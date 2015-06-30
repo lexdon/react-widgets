@@ -67,7 +67,6 @@ var localizer = {
 
   parse(value, format, culture, dateValidator, inputField){
     moment.locale(culture)
-
     return dateValidator(moment, value, format, inputField);
   },
 
@@ -104,18 +103,19 @@ var DatePicker = React.createClass({
     native: React.PropTypes.bool,
     calendarButtonFocusedClass: React.PropTypes.string,
     errorClass:React.PropTypes.string,
-    id: React.PropTypes.string.isRequired  
+    id: React.PropTypes.string.isRequired,
+    empty: React.PropTypes.bool  
   },
 
   getInitialState: function(){
     return {
-      inputValueStore: {value: 'derp'}, 
+      inputValueStore: {value: this.hintText()}, 
       comboboxValue: 1,
       selectValues: [3,4,5,2],
       calDate: new Date(),
       numberValue: 1,
       open: false,
-      value: new Date(),
+      value: new Date()
     }
   },
 
@@ -132,13 +132,36 @@ var DatePicker = React.createClass({
       twoDigitYearBreakpoint: new Date().getFullYear() - 1995,
       native: false,
       calendarButtonFocusedClass: "focused",
-      errorClass: "error"
+      errorClass: "error",
+      empty: false
     }
+  },
+
+  hintText() {
+    var format = "";
+    if (this.props.culture === 'en')
+      format = "MM/DD/YY";
+    else
+      format = "DD.MM.YY"
+    return format;
+  },
+
+  setHintText() {
+    this.state.inputValueStore.value = this.hintText();
+    this.setState({culture: this.state.culture});
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.empty)
+      this.setHintText();
   },
 
   componentDidMount() {
     yearBreakpoint = this.props.twoDigitYearBreakpoint;
-    this.presenter(this.props.defaultValue);
+    if (this.props.empty)
+      this.setHintText();
+    else  
+      this.presenter(this.props.defaultValue);
   },
 
   dateValidator(moment, value, format, inputField) {
@@ -245,7 +268,7 @@ var DatePicker = React.createClass({
     return returnValue;
   },
 
-  presenter(date, formattedDate) {
+  presenter(date, formattedDate) {   
     if (date instanceof Date) {
       moment.locale(this.props.culture);
       formattedDate = moment(date).format(localizer.formats.date); 
@@ -279,6 +302,8 @@ var DatePicker = React.createClass({
           <input type="date" defaultValue={moment().format('YYYY-MM-DD')}/>
           :
           <DateTimePicker 
+          empty={this.props.empty}
+          hintClass={this.props.hintClass}
           onFocus={this.onFocus} 
           inputValueStore={this.state.inputValueStore} 
           presenter={this.presenter} 

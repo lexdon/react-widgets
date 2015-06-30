@@ -75,6 +75,8 @@ var propTypes = {
                       React.PropTypes.func
                     ]),
     errorClass:     React.PropTypes.string.isRequired,
+    hintClass:     React.PropTypes.string.isRequired,
+    empty:          React.PropTypes.bool,
 
     id:             React.PropTypes.string.isRequired,
 
@@ -192,6 +194,8 @@ var DateTimePicker = React.createClass({
         })}>
 
         <DateInput ref='valueInput'
+          empty={this.props.empty}
+          hintClass={this.props.hintClass}
           presenter={this.props.presenter}
           inputValueStore={this.props.inputValueStore}
           aria-labelledby={this.props['aria-labelledby']}

@@ -6,7 +6,8 @@ var App = React.createClass({
 
 	getInitialState() {
 		return {
-			something: "Something"
+			something: "Something",
+      empty: true
 		}
 	},
 
@@ -55,14 +56,20 @@ var App = React.createClass({
     }
 	},
 
+  onClick() {
+    this.setState({empty: !this.state.empty});
+    this.refs['chosenOne'].setHintText();
+  },
+
 	render() {
 		return (
 			<div>
 				<h1>{this.state.something}</h1>
-    		<DatePicker id="test1" twoDigitYearBreakpoint={30} onChange={this.onChange}/>
-    		<DatePicker id="test2" twoDigitYearBreakpoint={50} onChange={this.onChange}/>
-    		<DatePicker id="test3" twoDigitYearBreakpoint={70}/>
-    		<DatePicker id="test4" twoDigitYearBreakpoint={90}/>
+        <button onClick={this.onClick}>Click me!</button>
+    		<DatePicker id="test1" twoDigitYearBreakpoint={30} hintClass="hint" ref="chosenOne" empty={this.state.empty} onChange={this.onChange}/>
+    		<DatePicker id="test2" twoDigitYearBreakpoint={50} hintClass="lint" onChange={this.onChange}/>
+    		<DatePicker id="test3" twoDigitYearBreakpoint={70} hintClass="stint"/>
+    		<DatePicker id="test4" twoDigitYearBreakpoint={90} hintClass="mint" />
 
     	</div>
 		)

@@ -12,6 +12,8 @@ module.exports = React.createClass({
 
 
   propTypes: {
+    empty:        React.PropTypes.bool,
+    hintClass:    React.PropTypes.string,
     format:       CustomPropTypes.dateFormat.isRequired,
     editFormat:   CustomPropTypes.dateFormat,
     parse:        React.PropTypes.func.isRequired,
@@ -67,12 +69,14 @@ module.exports = React.createClass({
   render: function(){
     var value = this.state.textValue
 
+    var c = "rw-input " + (this.props.hintClass && this.props.empty ? this.props.hintClass : '');
+
     return (
       <input
-        {...this.props}       
+        {...this.props}    
         ref="input"
         type='text'
-        className={cx({'rw-input': true })}
+        className={c}
         value={this.props.inputValueStore.value}
         aria-disabled={this.props.disabled}
         aria-readonly={this.props.readOnly}
