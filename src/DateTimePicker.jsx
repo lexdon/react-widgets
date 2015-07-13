@@ -80,7 +80,7 @@ var propTypes = {
 
     id:             React.PropTypes.string.isRequired,
 
-    displayError:   React.PropTypes.bool.isRequired,   
+    displayError:   React.PropTypes.bool.isRequired,
 
     calendarButtonFocusedClass: React.PropTypes.string.isRequired,
 
@@ -94,7 +94,8 @@ var propTypes = {
       calendarButton: React.PropTypes.string,
       timeButton:     React.PropTypes.string,
     }),
-    calendarOnChange: React.PropTypes.func
+    calendarOnChange: React.PropTypes.func,
+    onPopupEvent: React.PropTypes.func
   }
 
 
@@ -181,7 +182,7 @@ var DateTimePicker = React.createClass({
         onBlur ={this._focus.bind(null, false)}
         id={this.props.id}
         className={cx(className, 'rw-datetimepicker', 'rw-widget',
-          this.props.displayError ? this.props.errorClass : '', 
+          this.props.displayError ? this.props.errorClass : '',
          {
           'rw-state-focus':     this.state.focused,
           'rw-state-disabled':  this.isDisabled(),
@@ -409,13 +410,19 @@ var DateTimePicker = React.createClass({
   },
 
   open: function(view){
-    if ( this.props.open !== view && this.props[view] === true )
+    if ( this.props.open !== view && this.props[view] === true ) {
+      if (this.props.onPopupEvent)
+        this.props.onPopupEvent("open");
       this.notify('onToggle', view)
+    }
   },
 
   close: function(){
-    if ( this.props.open )
+    if ( this.props.open ) {
+      if (this.props.onPopupEvent)
+        this.props.onPopupEvent("close");
       this.notify('onToggle', false)
+    }
   },
 
   inRangeValue: function(value){
